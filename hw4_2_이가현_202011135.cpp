@@ -93,38 +93,22 @@ DominoStylePepperoniPizza::DominoStylePepperoniPizza(string oID) {
 class DeliveryProcessing {
 private:
 	int maxNumOrder;
-	Pizza** deliveryQueue; //Array of Pizza pointers
-	int front{ -1 };
-	int rear{ -2 };
 	vector<Pizza*> deliveryQueue;
 
 public:
-	DeliveryProcessing(int maxOrder) { maxNumOrder = maxOrder; deliveryQueue = new Pizza*; };
+	DeliveryProcessing(int maxOrder) { maxNumOrder = maxOrder; };
 	~DeliveryProcessing();
 	int addOrder(Pizza* newOrder);
 	int deliverOrder();
 };
 
 DeliveryProcessing::~DeliveryProcessing() {
-	for (int i = 0; i < this->maxNumOrder; i++) {
-		delete deliveryQueue[i];
-	}
-	delete[] deliveryQueue;
+
 }
 
 int DeliveryProcessing::addOrder(Pizza* newOrder) {
-	if ((rear - front + 1) < maxNumOrder) {
-		if ((rear - front + 1) == 0) {
-			deliveryQueue[0] = newOrder;
-			front = 0;
-			rear = 0;
-			cout << "[" << deliveryQueue[0]->getType() << "] is ordered by [" << deliveryQueue[0]->getOrderID() << "]" << endl;
-		}
-		else {
-			deliveryQueue[rear + 1] = newOrder;
-			cout << "[" << deliveryQueue[rear + 1]->getType() << "] is ordered by [" << deliveryQueue[rear + 1]->getOrderID() << "]" << endl;
-			rear++;
-		};
+	if (deliveryQueue.size() < maxNumOrder) {
+		deliveryQueue.push_back(newOrder);
 		return 1;
 	}
 	else {
@@ -135,14 +119,14 @@ int DeliveryProcessing::addOrder(Pizza* newOrder) {
 };
 
 int DeliveryProcessing::deliverOrder() {
-	if ((rear - front + 1) == 0) {
+	if (deliveryQueue.empty()) {
 		cout << "Queue is empty" << endl;
 		return 0;
 	}
 	else {
-		cout << "[" << deliveryQueue[front]->getType() << "] is delivered to [" << deliveryQueue[front]->getOrderID() << "]" << endl;
-		delete deliveryQueue[front];
-		front++;
+		cout << "[" << deliveryQueue.front()->getType() << "] is served to [" << deliveryQueue.front()->getOrderID() << "], ";
+		delete deliveryQueue.front();
+		deliveryQueue.erase(deliveryQueue.begin());
 		return 1;
 	};
 };
