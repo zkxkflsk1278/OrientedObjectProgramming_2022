@@ -161,6 +161,7 @@ public:
 	virtual Pizza* createPizza(string type, string orderID) = 0;
 	DeliveryProcessing* getDeliveryProcessingHandler() { return myDeliveryProcessing; };
 	int getTotalOrderCnt() { cout << "Total orders so far: " << OrderCnt << endl; return OrderCnt; };
+	string operator[](int index);
 };
 
 PizzaStore::~PizzaStore() { cout << "PizzaStore Destructor" << endl; };
@@ -248,36 +249,22 @@ int main() {
 	PizzaStore* dominoStore = new DominoPizzaStore();
 	Pizza* pizza_papa_1 = papaStore->orderPizza("cheese", "tom");
 	cout << pizza_papa_1->getType() << endl;
+	papaStore->getDeliveryProcessingHandler()->addOrder(pizza_papa_1);
+	cout << "PaPaStore[0]: " << (*papaStore)[0] << "PaPaStore[1]: " << (*papaStore)[1] << endl;
 	Pizza* pizza_papa_2 = papaStore->orderPizza("pepperoni", "nick");
 	cout << pizza_papa_2->getType() << endl;
-	Pizza* pizza_papa_3 = papaStore->orderPizza("cheese", "jack");
-	cout << pizza_papa_3->getType() << endl;
+	papaStore->getDeliveryProcessingHandler()->addOrder(pizza_papa_2);
+	cout << "PaPaStore[0]: " << (*papaStore)[0] << "PaPaStore[1]: " << (*papaStore)[1] << endl;
 	Pizza* pizza_domino_1 = dominoStore->orderPizza("cheese", "jenny");
 	cout << pizza_domino_1->getType() << endl;
 	Pizza* pizza_domino_2 = dominoStore->orderPizza("pepperoni", "kate");
 	cout << pizza_domino_2->getType() << endl;
-	Pizza* pizza_domino_3 = dominoStore->orderPizza("cheese", "nana");
-	cout << pizza_domino_3->getType() << endl;
-
-	papaStore->getDeliveryProcessingHandler()->addOrder(pizza_papa_1);
-	papaStore->getDeliveryProcessingHandler()->addOrder(pizza_papa_2);
-	papaStore->getDeliveryProcessingHandler()->addOrder(pizza_papa_3);
-	papaStore->getDeliveryProcessingHandler()->deliverOrder();
-	papaStore->getDeliveryProcessingHandler()->deliverOrder();
-	papaStore->getDeliveryProcessingHandler()->deliverOrder();
-	papaStore->getDeliveryProcessingHandler()->deliverOrder();
-
 	dominoStore->getDeliveryProcessingHandler()->addOrder(pizza_domino_1);
 	dominoStore->getDeliveryProcessingHandler()->addOrder(pizza_domino_2);
-	dominoStore->getDeliveryProcessingHandler()->addOrder(pizza_domino_3);
+	cout << "DominoStore[0]: " << (*dominoStore)[0] << "DominoStore[1]: " << (*dominoStore)[1] << endl;
+	papaStore->getDeliveryProcessingHandler()->deliverOrder();
 	dominoStore->getDeliveryProcessingHandler()->deliverOrder();
-	dominoStore->getDeliveryProcessingHandler()->deliverOrder();
-	dominoStore->getDeliveryProcessingHandler()->deliverOrder();
-	dominoStore->getDeliveryProcessingHandler()->deliverOrder();
-
-	//Dynamic deallocation
-	delete papaStore;
-	delete dominoStore;
-
-	return 0;
+	cout << "PaPaStore[0]: " << (*papaStore)[0] << "PaPaStore[1]: " << (*papaStore)[1] << endl;
+	cout << "DominoStore[0]: " << (*dominoStore)[0] << "DominoStore[1]: " << (*dominoStore)[1] << endl;
+	return 0;	
 }

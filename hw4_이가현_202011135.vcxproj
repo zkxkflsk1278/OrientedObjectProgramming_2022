@@ -127,7 +127,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="hw4_이가현_202011135.cpp" />
+    <ClCompile Include="hw4_2_이가현_202011135.cpp" />
+    <ClCompile Include="hw4_1_이가현_202011135.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
