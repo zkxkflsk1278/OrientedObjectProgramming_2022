@@ -88,7 +88,6 @@ DominoStylePepperoniPizza::DominoStylePepperoniPizza(string oID) {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 class DeliveryProcessing {
 private:
 	int maxNumOrder;
@@ -101,6 +100,9 @@ public:
 	~DeliveryProcessing();
 	int addOrder(Pizza* newOrder);
 	int deliverOrder();
+	Pizza** getQueue();
+	int getFront();
+	int getQueueSize() { return rear - front + 1; };
 };
 
 DeliveryProcessing::~DeliveryProcessing() {
@@ -144,6 +146,12 @@ int DeliveryProcessing::deliverOrder() {
 		return 1;
 	};
 };
+
+int DeliveryProcessing::getFront() {return front;}
+
+Pizza** DeliveryProcessing::getQueue() {
+	return deliveryQueue;
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -193,6 +201,31 @@ Pizza* PizzaStore::orderPizza(string type, string orderID) {
 	return pizza;
 };
 
+string PizzaStore::operator[](int index){
+	Pizza** queue;
+	int front;
+	int queueSize;
+	string pizzaType;
+
+	queue = getDeliveryProcessingHandler()->getQueue();
+	front = getDeliveryProcessingHandler()->getFront();
+	queueSize = getDeliveryProcessingHandler()->getQueueSize();
+	
+	try {
+		if (queueSize < index + 1) {
+			throw 0;
+		}
+		else {
+			pizzaType = queue[front + index]->getType() + " ";
+		}
+	}
+	catch (int i) {
+		pizzaType = "";
+	}
+
+
+	return pizzaType;
+}
 
 class PaPaPizzaStore : public PizzaStore {
 public:
@@ -247,24 +280,35 @@ int PizzaStore::OrderCnt = 0;
 int main() {
 	PizzaStore* papaStore = new PaPaPizzaStore();
 	PizzaStore* dominoStore = new DominoPizzaStore();
+
 	Pizza* pizza_papa_1 = papaStore->orderPizza("cheese", "tom");
 	cout << pizza_papa_1->getType() << endl;
 	papaStore->getDeliveryProcessingHandler()->addOrder(pizza_papa_1);
+
 	cout << "PaPaStore[0]: " << (*papaStore)[0] << "PaPaStore[1]: " << (*papaStore)[1] << endl;
+
 	Pizza* pizza_papa_2 = papaStore->orderPizza("pepperoni", "nick");
 	cout << pizza_papa_2->getType() << endl;
 	papaStore->getDeliveryProcessingHandler()->addOrder(pizza_papa_2);
+
 	cout << "PaPaStore[0]: " << (*papaStore)[0] << "PaPaStore[1]: " << (*papaStore)[1] << endl;
+
 	Pizza* pizza_domino_1 = dominoStore->orderPizza("cheese", "jenny");
 	cout << pizza_domino_1->getType() << endl;
+
 	Pizza* pizza_domino_2 = dominoStore->orderPizza("pepperoni", "kate");
 	cout << pizza_domino_2->getType() << endl;
+
 	dominoStore->getDeliveryProcessingHandler()->addOrder(pizza_domino_1);
 	dominoStore->getDeliveryProcessingHandler()->addOrder(pizza_domino_2);
+
 	cout << "DominoStore[0]: " << (*dominoStore)[0] << "DominoStore[1]: " << (*dominoStore)[1] << endl;
+
 	papaStore->getDeliveryProcessingHandler()->deliverOrder();
 	dominoStore->getDeliveryProcessingHandler()->deliverOrder();
+
 	cout << "PaPaStore[0]: " << (*papaStore)[0] << "PaPaStore[1]: " << (*papaStore)[1] << endl;
 	cout << "DominoStore[0]: " << (*dominoStore)[0] << "DominoStore[1]: " << (*dominoStore)[1] << endl;
+
 	return 0;	
 }
